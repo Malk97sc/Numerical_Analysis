@@ -3,7 +3,7 @@
 #include <math.h>
 
 double g(double x){
-    return pow(M_E, -x);  //Change this
+    return pow(M_E, -x);  //change this
 }
 
 double fixedPoint(double x0, int n){
