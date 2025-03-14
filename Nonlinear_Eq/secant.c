@@ -3,7 +3,6 @@
 #include <math.h>
 
 double f(double x);
-double g(double x, double y);
 double secant(double x0, double x1, int n);
 
 int main(int argc, char **argv){

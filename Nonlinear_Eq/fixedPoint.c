@@ -14,12 +14,11 @@ int main(int argc, char **argv){
 
     printf("Result is: %f\n", fixedPoint(x0, n));
 
-    
     return EXIT_SUCCESS;
 }
 
 double g(double x){
-    return pow(M_E, -x);  //Change this
+    return pow(M_E, -x);  //change this
 }
 
 double fixedPoint(double x0, int n){
