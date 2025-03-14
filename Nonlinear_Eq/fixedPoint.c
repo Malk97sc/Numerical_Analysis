@@ -2,6 +2,22 @@
 #include <stdio.h>
 #include <math.h>
 
+double g(double x);
+double fixedPoint(double x0, int n);
+
+int main(int argc, char **argv){
+    if(argc < 2){
+        perror("Send n\n"); return EXIT_FAILURE;
+    }
+    double x0 = 0.5000;
+    int n = atoi(argv[1]);
+
+    printf("Result is: %f\n", fixedPoint(x0, n));
+
+    
+    return EXIT_SUCCESS;
+}
+
 double g(double x){
     return pow(M_E, -x);  //Change this
 }
@@ -25,17 +41,4 @@ double fixedPoint(double x0, int n){
 
     printf("Max iters\n");
     return x; //max iters
-}
-
-int main(int argc, char **argv){
-    if(argc < 2){
-        perror("Send n\n"); return EXIT_FAILURE;
-    }
-    double x0 = 0.5000;
-    int n = atoi(argv[1]);
-
-    printf("Result is: %f\n", fixedPoint(x0, n));
-
-    
-    return EXIT_SUCCESS;
 }

@@ -20,7 +20,8 @@ int main(int argc, char **argv){
 }
 
 void bisection(double lowerLim, double upperLim, int n){
-    double a, c, b, fa, fc, fb, cPrev, errorA = 0, tol = 0;
+    double a, c, b, fa, fc, fb, cPrev, errorA = 0, tol = 1e-5;
+    int convg = 0, i;; //if the method converged
 
     a = lowerLim;
     b = upperLim;
@@ -28,7 +29,7 @@ void bisection(double lowerLim, double upperLim, int n){
     printf("| Iteration\t| Lower Limit\t\t| Midpoint\t\t\t| Upper Limit\t\t| f(a)\t\t| f(c)\t\t| f(b)\t\t| Error\t\t\t|\n");
     showBar(BARSIZE);
 
-    for(int i=0; i < n; i++){
+    for(i=0; i < n; i++){
         c = (a+b) / 2.0;
         fa = f(a); //lower limit
         fb = f(b); //upper limit
@@ -43,7 +44,7 @@ void bisection(double lowerLim, double upperLim, int n){
             cPrev = c;
 
             if(errorA <= tol){
-                printf("Converged after %d iterations.\n", i);
+                convg = 1;
                 break;
             }            
         }
@@ -58,10 +59,15 @@ void bisection(double lowerLim, double upperLim, int n){
         }
     }
     showBar(BARSIZE);
+
+    if(convg){
+        printf("Converged after %d iterations.\n", i+1);
+    }
 }
 
 double f(double x){
-    return pow(x,4) - 2*pow(x,3) - 4*pow(x,2) + 4*x + 4; //f(x) = x^4 - 2x^3 - 4x^2 + 4x + 4
+    //return pow(x,4) - 2*pow(x,3) - 4*pow(x,2) + 4*x + 4; //f(x) = x^4 - 2x^3 - 4x^2 + 4x + 4
+    return pow(x,4) + 2*pow(x,3) - 13*pow(x,2) - 14*x + 24;
 }
 
 void showBar(int size){
