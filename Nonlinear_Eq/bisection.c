@@ -10,7 +10,7 @@ void bisection(double lowerLim, double upperLim, int n);
 
 int main(int argc, char **argv){
     if(argc < 4){
-        perror("Send lowe Limit, Upper Limit and N iters\n");
+        perror("Send lower Limit, Upper Limit and N iters\n");
         return EXIT_FAILURE;
     }
 
@@ -20,7 +20,7 @@ int main(int argc, char **argv){
 }
 
 void bisection(double lowerLim, double upperLim, int n){
-    double a, c, b, fa, fc, fb, cPrev, errorA = 0, tol = 1e-5;
+    double a, c, b, fa, fc, fb, cPrev, errorA = 0, tol = 1e-6;
     int convg = 0, i;; //if the method converged
 
     a = lowerLim;
