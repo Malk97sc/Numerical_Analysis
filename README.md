@@ -23,7 +23,7 @@ Run:
 ```bash
 ./jacobian.out coefficients.dat constantTerms.dat
 ```
-**Note**: Ensure that `coefficients.dat` and `constantTerms.dat` are present in the directory with the program.
+**Note**: Ensure that `coefficients.dat` and `constantTerms.dat` are present in the directory with the program and the first value in the file represents the number of elements.
 
 ## Interpolation
 
@@ -48,3 +48,10 @@ Run:
 ./lagrange xValues.dat yValues.dat 
 ```
 **Note**: Ensure that `xValues.dat` and `yValues.dat` are present in the directory with the program.
+
+### Input File Format  
+
+Both `xValues.dat` and `yValues.dat` must follow this format:  
+
+- The first value in the file represents the number of data points.  
+- The following values are the respective x or y coordinates.  
