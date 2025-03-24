@@ -24,3 +24,27 @@ Run:
 ./jacobian.out coefficients.dat constantTerms.dat
 ```
 **Note**: Ensure that `coefficients.dat` and `constantTerms.dat` are present in the directory with the program.
+
+## Interpolation
+
+### Lagrange
+Use these commands to compile the code:
+
+In normal mode (only the final result)
+```bash
+gcc lagrange.c -o lagrange
+```
+Run:
+```bash
+./lagrange xValues.dat yValues.dat
+```
+
+Debug mode (with additional output for debugging):
+```bash
+gcc lagrange.c -D DEBUG -o lagrange
+```
+Run:
+```bash
+./lagrange xValues.dat yValues.dat 
+```
+**Note**: Ensure that `xValues.dat` and `yValues.dat` are present in the directory with the program.
