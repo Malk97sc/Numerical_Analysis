@@ -28,9 +28,9 @@ Run:
 ## Interpolation
 
 ### Lagrange
-Use these commands to compile the code:
+#### Compilation and Execution
 
-In normal mode (only the final result)
+#### Simple version
 ```bash
 gcc lagrange.c -o lagrange
 ```
@@ -47,6 +47,20 @@ Run:
 ```bash
 ./lagrange xValues.dat yValues.dat 
 ```
+
+#### Multi-threaded version
+
+To use lagrangeWithThreads.c:
+```bash
+gcc lagrangeWithThreads.c -lm -o lagrangeThreads
+```
+
+Run:
+```bash
+./lagrangeThreads 2 xValues.dat yValues.dat
+```
+**Note**: `num_threads` specifies the number of threads to use (first argument).
+
 **Note**: Ensure that `xValues.dat` and `yValues.dat` are present in the directory with the program.
 
 ### Input File Format  
