@@ -50,7 +50,6 @@ Run:
 
 #### Multi-threaded version
 
-To use lagrangeWithThreads.c:
 ```bash
 gcc lagrangeWithThreads.c -lm -o lagrangeThreads
 ```
