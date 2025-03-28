@@ -100,7 +100,7 @@ void *calculateLagrange(void *arg){
 
         pthread_mutex_lock(&mutex);
         for(int j=0; j < data->numElements; j++){
-            coeffs[j] += coefftemp[j];
+            coeffs[j] += coefftemp[j]; //minimize mutex time while updating coeffs using coefftemp
         }
         pthread_mutex_unlock(&mutex);
         
