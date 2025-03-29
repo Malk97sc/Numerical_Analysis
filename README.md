@@ -74,6 +74,7 @@ Run:
 ./sel.out x.dat fx.dat
 ```
 **Note**: Ensure that `x.dat` and `fx.dat` are present in the directory with the program.
+
 **Note**: The program internally calls `exec` to run Gauss-Seidel and print the results (in Gauss-Seidel).
 
 ### Input File Format  
