@@ -1,38 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <math.h>
-
-pthread_mutex_t mutex;
-
-typedef struct{
-    int i;
-    int end;
-    int numElements;
-} ThreadData;
-
-double *xValues, *yValues, *coeffs;
 
 void readValues(const char *file, double **vec, int *size);
-void createThreads(int numThreads, int numElements);
-void *calculateLagrange(void *arg);
 void printPolynomial(double *coeffs, int degree);
+void lagrangePolynomial(double *xVec, double *yVec, int n, double **coeffs);
 void lagrangebasisPoly(int i, double *x_values, int n, double **poly);
 void multiplyPolynomials(double *pol1, int deg1, double *pol2, int deg2, double **result);
 
 int main(int argc, char **argv){
-    if(argc < 4){
-        perror("Send the number of threads and the files\n");
+    if(argc < 3){
+        perror("Send x file values and y file values\n");
         return EXIT_FAILURE;
     }
+    double *xValues, *yValues, *coeffs;
+    int n1, n2;
 
-    int numsX, numsY, numThreads = atoi(argv[1]);
+    readValues(argv[1], &xValues, &n1);
+    readValues(argv[2], &yValues, &n2);
 
-    readValues(argv[2], &xValues, &numsX);
-    readValues(argv[3], &yValues, &numsY);
-
-    if (numsX != numsY) {
+    if (n1 != n2) {
         perror("Error: X and Y values must have the same size.\n");
         free(xValues);
         free(yValues);
@@ -40,74 +26,60 @@ int main(int argc, char **argv){
     }
 
     printf("Points loaded:\n");
-    for (int i = 0; i < numsX; i++){
+    for (int i = 0; i < n1; i++){
         printf("(%lf, %lf) ", xValues[i], yValues[i]);
     }
     printf("\n\n");
 
-    coeffs = (double*) calloc(numsX, sizeof(double));
-    if(!coeffs){
-        perror("Memory allocation failed for coeffs\n");
-        free(xValues);
-        free(yValues);
-        return EXIT_FAILURE;
-    }
-
-    pthread_mutex_init(&mutex, NULL);
-    createThreads(numThreads, numsX); //cause numsX and numsY are the same size
-    pthread_mutex_destroy(&mutex);
+    lagrangePolynomial(xValues, yValues, n1, &coeffs);
 
     printf("Interpolated polynomial: P(x) = ");
-    printPolynomial(coeffs, numsX-1);
-
-    free(coeffs);
+    printPolynomial(coeffs, n1 - 1);
+    printf("\n");
+    
     free(xValues);
     free(yValues);
+    free(coeffs);
     return EXIT_SUCCESS;
 }
 
-void createThreads(int numThreads, int numElements){
-    int chunk = numElements / numThreads;
-    pthread_t threads[numThreads];
-    ThreadData data[numThreads];
+void lagrangePolynomial(double *xVec, double *yVec, int n, double **coeffs){
+    (*coeffs) = (double*)calloc(n, sizeof(double));
+    double *L;
 
-    for(int i=0; i < numThreads; i++){
-        data[i].i = chunk * i;
-        data[i].end = (i == numThreads - 1)? numElements: chunk * (i+1);
-        data[i].numElements = numElements;
-        pthread_create(&threads[i], NULL, calculateLagrange, (void*)&data[i]);
+    if(!(*coeffs)){
+        perror("Fail Malloc\n");
+        exit(1);
     }
 
-    for(int i=0; i < numThreads; i++){
-        pthread_join(threads[i], NULL);
-    }
-}
+    #ifdef DEBUG
+        printf("\n----------------------------Building Lagrange Polynomial----------------------------\n");  
+    #endif
 
-void *calculateLagrange(void *arg){
-    ThreadData *data = (ThreadData *)arg;
-    double *L, *coefftemp;
-
-    printf("Thread %ld processing L_i(x) = %d\n", pthread_self(), data->i);
-
-    for(int i=data->i; i < data->end; i++){
-        lagrangebasisPoly(i, xValues, data->numElements, &L);
-
-        coefftemp = (double*)calloc(data->numElements, sizeof(double));
-        if(!coefftemp){perror("Memory allocation failed\n"); free(L); pthread_exit(NULL); }
-        for(int j=0; j < data->numElements; j++){
-            coefftemp[j] += yValues[i] * L[j];
-        }
-
-        pthread_mutex_lock(&mutex);
-        for(int j=0; j < data->numElements; j++){
-            coeffs[j] += coefftemp[j]; //minimize mutex time while updating coeffs using coefftemp
-        }
-        pthread_mutex_unlock(&mutex);
+    for(int i=0; i < n; i++){
+        #ifdef DEBUG
+            printf("==================== Processing Basis Polynomial L_%d ====================\n", i);
+        #endif
         
+        lagrangebasisPoly(i, xVec, n, &L);
+
+        #ifdef DEBUG
+            printf("L_%d(x) coefficients: ", i);
+            printPolynomial(L, n-1);
+            printf("\n\n");
+        #endif
+
+        for(int j=0; j < n; j++){            
+            (*coeffs)[j] += yVec[i] * L[j];
+        }
+        
+        #ifdef DEBUG
+            printf("Saving values in P(x) = ");
+            printPolynomial(*coeffs, n-1);
+            printf("\n\n");
+        #endif
         free(L);
-        free(coefftemp);
     }
-    pthread_exit(NULL);
 }
 
 void lagrangebasisPoly(int i, double *x_values, int n, double **poly){
@@ -115,7 +87,7 @@ void lagrangebasisPoly(int i, double *x_values, int n, double **poly){
     double denom, factor[2], *temp;
 
     if(!(*poly)){
-        perror("Memory allocation failed\n");
+        perror("Fail Malloc\n");
         exit(1);
     }
 
@@ -162,7 +134,7 @@ void multiplyPolynomials(double *pol1, int deg1, double *pol2, int deg2, double 
     int newDeg = deg1 + deg2;
     *result = (double*)calloc(newDeg+1, sizeof(double));
     if (!(*result)) {
-        perror("Memory allocation failed\n");
+        perror("Fail Malloc\n");
         exit(1);
     }
 
@@ -187,36 +159,14 @@ void multiplyPolynomials(double *pol1, int deg1, double *pol2, int deg2, double 
     #endif
 }
 
-void printPolynomial(double *coeffs, int degree) {
-    int firstTerm = 1;
-
-    printf("P(x) = ");
-    for(int i=degree; i >= 0; i--){
-        if(coeffs[i] != 0.0){
-            if(!firstTerm){
-                printf(" %c ", (coeffs[i] < 0) ? '-' : '+');
-            }else if(coeffs[i] < 0){
-                printf("-");
-            }
-
-            printf("%.5lf", fabs(coeffs[i]));
-
-            if(i > 0){
-                printf("x");
-                if(i > 1){
-                    printf("^%d", i);
-                }
-            }
-
-            firstTerm = 0;
+void printPolynomial(double *coeffs, int degree){
+    for (int i = degree; i >= 0; i--) {
+        if (coeffs[i] != 0.0) {
+            printf("%.5lf", coeffs[i]);
+            if (i > 0) printf("x^%d ", i);
+            if (i > 0 && coeffs[i - 1] >= 0) printf("+ ");
         }
     }
-
-    if (firstTerm) {
-        printf("0.00000");
-    }
-
-    printf("\n");
 }
 
 void readValues(const char *file, double **vec, int *size){
