@@ -62,6 +62,20 @@ Run:
 
 **Note**: Ensure that `xValues.dat` and `yValues.dat` are present in the directory with the program.
 
+### System of Equations Solver (SEL)
+The program solves a system of linear equations using the Gauss-Seidel method and prints the corresponding interpolating polynomial
+
+#### Compilation
+```bash
+gcc sel.c -lm -o sel.out
+```
+Run:
+```bash
+./sel.out x.dat fx.dat
+```
+**Note**: Ensure that `x.dat` and `fx.dat` are present in the directory with the program.
+**Note**: The program internally calls `exec` to run Gauss-Seidel and print the results (in Gauss-Seidel).
+
 ### Input File Format  
 
 Both `xValues.dat` and `yValues.dat` must follow this format:  
