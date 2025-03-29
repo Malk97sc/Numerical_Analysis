@@ -5,14 +5,14 @@
 void jacobian(double **A, double *b, double *x, int n);
 double normTwo(double *xk, double *xk_prev, int n);
 void readCoefficients(const char *file, int *size, double ***A);
-void readConstants(const char *file, int *size, double **b, double **x);
+void readConstants(const char *constants, const char *initVec, int *size, double **b,  double **x);
 
 void showMatx(double **A, int n); //debug
 void showVect(double *b, int n); //debug
 void failMalloc();
 
 int main(int argc, char **argv){
-    if(argc < 3){
+    if(argc < 4){
         perror("Send file\n");
         return EXIT_FAILURE;
     }
@@ -20,9 +20,10 @@ int main(int argc, char **argv){
     double **A, *x, *b;
 
     readCoefficients(argv[1], &n, &A);
-    readConstants(argv[2], &n, &b, &x);
+    readConstants(argv[2],argv[3], &n, &b, &x);
     //showMatx(A, n);
     //showVect(b, n);
+    //showVect(x, n);
 
     jacobian(A, b, x, n);
 
@@ -95,14 +96,22 @@ double normTwo(double *xk, double *xk_prev, int n){
     return sqrt(sum);
 }
 
-void readConstants(const char *file, int *size, double **b,  double **x){
-    FILE *fl = fopen(file, "r");
-    if(!fl){
+void readConstants(const char *constants, const char *initVec, int *size, double **b,  double **x){
+    FILE *fl = fopen(constants, "r");
+    FILE *fl2 = fopen(initVec, "r");
+    if(!fl || !fl2){
         perror("Fail to open file\n");
         return;
     }
+    int sizeConst, sizeInitVec;
 
-    fscanf(fl, "%d", size);
+    fscanf(fl, "%d", &sizeConst);
+    fscanf(fl2, "%d", &sizeInitVec);
+    if(sizeConst != sizeInitVec){
+        perror("Differents sizes in the file init vec and constants\n");
+        exit(-1);
+    }
+    *size = sizeConst = sizeInitVec;
     //printf("Amount of constants is: %d\n", *size);
 
     *b = (double *) calloc(*size, sizeof(double)); //constants vector
@@ -118,10 +127,15 @@ void readConstants(const char *file, int *size, double **b,  double **x){
     }
 
     for(int i=0; i < *size; i++){
+        fscanf(fl2, "%lf", &(*x)[i]);
+    }
+
+    for(int i=0; i < *size; i++){
         fscanf(fl, "%lf", &(*b)[i]);
     }
 
     fclose(fl);
+    fclose(fl2);
 }
 
 void readCoefficients(const char *file, int *size, double ***A){
