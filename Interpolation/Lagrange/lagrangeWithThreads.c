@@ -87,7 +87,10 @@ void *calculateLagrange(void *arg){
     ThreadData *data = (ThreadData *)arg;
     double *L, *coefftemp;
 
-    printf("Thread %ld processing L_i(x) = %d\n", pthread_self(), data->i);
+    printf("Thread %ld processing L_i(x) in range [%d, %d]\n", 
+           pthread_self(),
+           data->i, 
+           data->end - 1);
 
     for(int i=data->i; i < data->end; i++){
         lagrangebasisPoly(i, xValues, data->numElements, &L);
