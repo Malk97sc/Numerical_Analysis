@@ -27,11 +27,11 @@ double g(double x){
 }
 
 double f(double x){
-    return pow(x, 3) - 151.000000/50000.000000;
+    return 9*pow(x, 2) - 24*x + 16;
 }
 
 double fPrim(double x){
-    return 3 * pow(x, 2);
+    return 18*x-24;
 }
 
 void Newton_Raphson(double a){
@@ -44,7 +44,7 @@ void Newton_Raphson(double a){
     do{
         next = g(x);
         ea = fabs(next - x);
-        printf("| %2d\t\t| %.14f\t| %.14f\t| %.14f\t|\n", i, next, fabs(f(x)), ea);
+        printf("| %2d\t\t| %.14f\t| %.14f\t| %.14f\t|\n", i, next, fabs(f(next)), ea);
         x = next;
         i++;
     }while(ea > tol);
