@@ -73,7 +73,7 @@ Run:
 ```bash
 ./sel.out x.dat fx.dat
 ```
-**Note**: Ensure that `x.dat` and `fx.dat` are present in the directory with the program.
+**Note**: Ensure that `x.dat` and `fx.dat` are present in the directory with the program and used the correct format.
 
 **Note**: The program internally calls `exec` to run Gauss-Seidel and print the results (in Gauss-Seidel).
 
