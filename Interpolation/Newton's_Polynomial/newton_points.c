@@ -45,6 +45,7 @@ int main(int argc, char **argv){
 
     for(int i=0; i < n1; i++) free(table[i]);
     free(table);
+    free(poly);
     free(x_values);
     free(y_values);
     return EXIT_SUCCESS;
