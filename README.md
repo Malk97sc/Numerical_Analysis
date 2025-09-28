@@ -83,3 +83,18 @@ Both `xValues.dat` and `yValues.dat` must follow this format:
 
 - The first value in the file represents the number of data points.  
 - The following values are the respective x or y coordinates.  
+
+### Newton’s Polynomial Interpolation
+
+It calculates the interpolating polynomial using the Newton form and can be used to estimate the function polynomial.
+
+#### Compilation
+```bash
+gcc newton_points.c -o newton.out
+```
+Run:
+```bash
+./newton.out x.dat fx.dat
+```
+
+**Note**: Ensure that `x.dat` and `fx.dat` are present in the directory with the program and used the correct format.
