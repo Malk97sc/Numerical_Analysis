@@ -1,5 +1,12 @@
 # Numerical Analysis
 
+## Input File Format  
+
+Both `xValues.dat` or `yValues.dat` must follow this format:  
+
+- The first value in the file represents the number of data points.  
+- The following values are the respective x or y coordinates.  
+
 ## Non-Linear Equations
 Use the following command to compile the code:
 
@@ -76,13 +83,6 @@ Run:
 **Note**: Ensure that `x.dat` and `fx.dat` are present in the directory with the program and used the correct format.
 
 **Note**: The program internally calls `exec` to run Gauss-Seidel and print the results (in Gauss-Seidel).
-
-### Input File Format  
-
-Both `xValues.dat` and `yValues.dat` must follow this format:  
-
-- The first value in the file represents the number of data points.  
-- The following values are the respective x or y coordinates.  
 
 ### Newton’s Polynomial Interpolation
 
